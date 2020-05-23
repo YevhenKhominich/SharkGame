@@ -5,7 +5,6 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -23,9 +22,7 @@ public class Main extends Application {
 
     public static ArrayList<ImageView> foods = new ArrayList<>();
 
-    Image image = new Image("images/sharkLeftAndRight.png");
-    ImageView imageView = new ImageView(image);
-    Shark player = new Shark(imageView);
+    private Shark player = new Shark();
     public static Pane root = new Pane();
 
     public void bonus() {
@@ -42,28 +39,24 @@ public class Main extends Application {
 
     public void update() {
 
-
         foods.forEach(bonus -> bonus.setTranslateY(bonus.getTranslateY() + 1));
 
         if (isPressed(KeyCode.UP)) {
-            player.animation.play();
-            player.animation.setOffsetY(285);
+            player.animationRightAndLeft.play();
             player.moveY(-2);
         } else if (isPressed(KeyCode.DOWN)) {
-            player.animation.play();
-            player.animation.setOffsetY(0);
+            player.animationRightAndLeft.play();
             player.moveY(2);
         } else if (isPressed(KeyCode.RIGHT)) {
-            player.animation.play();
-            player.animation.setOffsetY(67);
+            player.animationRightAndLeft.play();
+            player.animationRightAndLeft.setOffsetY(67);
             player.moveX(2);
         } else if (isPressed(KeyCode.LEFT)) {
-            player.animation.play();
-            player.animation.setOffsetY(0);
+            player.animationRightAndLeft.play();
+            player.animationRightAndLeft.setOffsetY(0);
             player.moveX(-2);
         } else {
-
-            player.animation.stop();
+            player.animationRightAndLeft.stop();
         }
     }
 
@@ -72,7 +65,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage)  {
 
         label.setText("Points : ");
         label.setTranslateX(10);
@@ -95,7 +88,7 @@ public class Main extends Application {
         };
         timer.start();
         primaryStage.setResizable(false);
-        primaryStage.setTitle("Game");
+        primaryStage.setTitle("Shark Game");
         primaryStage.setScene(scene);
         primaryStage.show();
 

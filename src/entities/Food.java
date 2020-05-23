@@ -18,7 +18,6 @@ public class Food {
         return imageView;
     }
 
-
     public int getBonus() {
         return bonus;
     }
