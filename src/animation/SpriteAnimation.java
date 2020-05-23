@@ -1,4 +1,4 @@
-package sample;
+package animation;
 
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -8,22 +8,17 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 
-public class SpriteAnimation  extends Transition{
-    private final ImageView imageView;
-    private final int count;
-    private final int columns;
+public class SpriteAnimation extends Transition {
+    final private ImageView imageView;
+    final private int count;
+    final private int columns;
+    final private int width;
+    final private int height;
     private int offsetX;
     private int offsetY;
-    private final int width;
-    private final int height;
 
-    public SpriteAnimation(
-            ImageView imageView,
-            Duration duration,
-            int count, int columns,
-            int offsetX, int offsetY,
-            int width, int height
-    ){
+    public SpriteAnimation(ImageView imageView, Duration duration, int count, int columns,
+                           int offsetX, int offsetY, int width, int height) {
         this.imageView = imageView;
         this.count = count;
         this.columns = columns;
@@ -37,18 +32,16 @@ public class SpriteAnimation  extends Transition{
         this.imageView.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
 
     }
-    public void setOffsetX(int x){
-        this.offsetX = x;
-    }
 
-    public void setOffsetY(int y){
+    public void setOffsetY(int y) {
         this.offsetY = y;
     }
 
+    //move animation
     protected void interpolate(double frac) {
-        final int index = Math.min((int)Math.floor(count*frac), count-1);
-        final int x = (index%columns)*width+offsetX;
-        final int y = (index/columns)*height+offsetY;
+        final int index = Math.min((int) Math.floor(count * frac), count - 1);
+        final int x = (index % columns) * width + offsetX;
+        final int y = (index / columns) * height + offsetY;
         imageView.setViewport(new Rectangle2D(x, y, width, height));
     }
 }

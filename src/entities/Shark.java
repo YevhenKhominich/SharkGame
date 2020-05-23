@@ -6,25 +6,30 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import sample.Main;
-import sample.SpriteAnimation;
+import controllers.GameController;
+import animation.SpriteAnimation;
 
 public class Shark extends Pane {
 
-    private ImageView imageViewRightAndLeft = new ImageView(new Image("images/sharkLeftAndRight.png"));
-    private int count = 3;
-    private int columns = 3;
+    public SpriteAnimation animation;
+
+    final private ImageView imageViewRightAndLeft = new ImageView(new Image("images/sharkLeftAndRight.png"));
+    final private int count = 3;
+    final private int columns = 3;
+    final private int offsetX = 2;
+    final private int offsetY = 0;
+    final private int width = 152;
+    final private int height = 63;
+
     private int score = 0;
-    public ImageView removeRect = null;
-    public SpriteAnimation animationRightAndLeft;
+    private Food removeBonus = null;
 
     public Shark() {
-        imageViewRightAndLeft.setViewport(new Rectangle2D(2, 0, 152, 63));
-        animationRightAndLeft = new SpriteAnimation(imageViewRightAndLeft, Duration.millis(200), count, columns,
-                2, 0, 152, 63);
+        imageViewRightAndLeft.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+        animation = new SpriteAnimation(imageViewRightAndLeft, Duration.millis(200), count, columns,
+                offsetX, offsetY, width, height);
 
         getChildren().addAll(imageViewRightAndLeft);
-
 
     }
 
@@ -47,17 +52,16 @@ public class Shark extends Pane {
     }
 
     public void isBonusEat() {
-        Main.foods.forEach((rect) -> {
-            if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
-                removeRect = rect;
-                score++;
-                Main.label.setText("Points : " + score);
+        for (int i = 0; i < GameController.foods.size(); i++) {
+            if (this.getBoundsInParent().intersects(GameController.foods.get(i).getImageView().getBoundsInParent())) {
+                removeBonus = GameController.foods.get(i);
+                score += removeBonus.getBonus();
+                GameController.label.setText("Points : " + score);
+                GameController.foods.remove(removeBonus);
+                GameController.root.getChildren().remove(removeBonus.getImageView());
             }
 
-        });
-
-        Main.foods.remove(removeRect);
-        Main.root.getChildren().remove(removeRect);
+        }
     }
 
 }
