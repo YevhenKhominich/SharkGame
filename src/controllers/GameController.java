@@ -2,6 +2,8 @@ package controllers;
 
 import entities.Food;
 import entities.Shark;
+import entities.WaterDown;
+import entities.WaterUp;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -9,23 +11,30 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GameController extends Application {
 
     public static Pane root = new Pane();
     public static Label label = new Label();
-    public static ArrayList<Food> foods = new ArrayList<>();
+    public static List<Food> foods = new ArrayList<>();
 
-    private HashMap<KeyCode, Boolean> keys = new HashMap<>();
+    private List<WaterDown> waterDownAnimation = new ArrayList<>();
+    private List<WaterUp> waterUpAnimation = new ArrayList<>();
+
+    private Map<KeyCode, Boolean> keys = new HashMap<>();
     private FoodGenerator foodGenerator = new FoodGenerator();
     private Shark player = new Shark();
-    private boolean gameStopped = false;
 
-    AnimationTimer timer = new AnimationTimer() {
+    private AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
             update();
@@ -50,13 +59,6 @@ public class GameController extends Application {
     //update moving animation
     private void update() {
 
-//        if (isPressed(KeyCode.SPACE)) {
-//            gameStopped = true;
-//        }
-//
-//        if (gameStopped) {
-//            timer.stop();
-//        }
         foods.forEach(bonus -> bonus.getImageView().setTranslateY(bonus.getImageView().getTranslateY() + 1));
 
         if (isPressed(KeyCode.UP)) {
@@ -76,30 +78,81 @@ public class GameController extends Application {
         } else player.animation.stop();
     }
 
-
     private boolean isPressed(KeyCode key) {
         return keys.getOrDefault(key, false);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        label.setText("Points : ");
-        label.setTranslateX(10);
-        label.setTranslateY(10);
-        root.setPrefSize(800, 600);
-        root.getChildren().add(new ImageView("images/background.png"));
-        root.getChildren().addAll(player, label);
+
+        initLabel();
+        initWaterDownAnimation();
+        initWaterUpAnimation();
+        initRoot();
+
+        waterDownAnimation.forEach(waterDown -> waterDown.getWaterAnimation().play());
+        waterUpAnimation.forEach(waterUp -> waterUp.getWaterAnimation().play());
 
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> {
             keys.put(event.getCode(), false);
         });
+
         timer.start();
-        primaryStage.setResizable(false);
         primaryStage.setTitle("Shark Game");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+    }
+
+    private void initRoot() {
+        root.setPrefSize(800, 600);
+        root.getChildren().add(new ImageView("images/background.png"));
+        root.getChildren().addAll(player, label);
+    }
+
+    private void initLabel() {
+        label.setFont(Font.font("Calibri Bold Italic", FontPosture.ITALIC, 30));
+        label.setTextFill(Paint.valueOf("#2E3348"));
+        label.setText("Points : ");
+        label.setTranslateX(10);
+        label.setTranslateY(10);
+    }
+
+    private void initWaterDownAnimation() {
+
+        int positionX = 30;
+
+        for (int i = 0; i < 7; i++) {
+            waterDownAnimation.add(new WaterDown());
+        }
+
+        for (WaterDown waterDown : waterDownAnimation) {
+            ImageView waterImageView = waterDown.getImageView();
+            waterImageView.setTranslateY(400);
+            waterImageView.setTranslateX(positionX);
+            positionX += 120;
+            root.getChildren().add(waterImageView);
+        }
+
+    }
+
+    private void initWaterUpAnimation() {
+
+        int positionX = 25;
+
+        for (int i = 0; i < 7; i++) {
+            waterUpAnimation.add(new WaterUp());
+        }
+
+        for (WaterUp waterUp : waterUpAnimation) {
+            ImageView waterImageView = waterUp.getImageView();
+            waterImageView.setTranslateY(20);
+            waterImageView.setTranslateX(positionX);
+            positionX += 120;
+            root.getChildren().add(waterImageView);
+        }
 
     }
 

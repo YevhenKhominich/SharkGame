@@ -37,7 +37,7 @@ public class SpriteAnimation extends Transition {
         this.offsetY = y;
     }
 
-    //move animation
+    //move waterAnimation
     protected void interpolate(double frac) {
         final int index = Math.min((int) Math.floor(count * frac), count - 1);
         final int x = (index % columns) * width + offsetX;
