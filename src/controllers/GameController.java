@@ -85,10 +85,10 @@ public class GameController extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        initRoot();
         initLabel();
         initWaterDownAnimation();
         initWaterUpAnimation();
-        initRoot();
 
         waterDownAnimation.forEach(waterDown -> waterDown.getWaterAnimation().play());
         waterUpAnimation.forEach(waterUp -> waterUp.getWaterAnimation().play());
